@@ -99,4 +99,3 @@ If you encounter issues with the submit button not responding:
 
 Contributions to the Repo Market Analyzer are welcome! Please fork the repository and submit a pull request with your proposed changes.
 
-## License
