@@ -1,8 +1,7 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 
 const DataInput = ({ setResults }) => {
-  // State to hold form data
   const [formData, setFormData] = useState({
     start_date: '',
     end_date: '',
@@ -10,29 +9,40 @@ const DataInput = ({ setResults }) => {
     loan_amount: ''
   });
 
-  // Handle input changes
+  useEffect(() => {
+    console.log('DataInput component mounted');
+  }, []);
+
   const handleChange = (e) => {
+    console.log(`Input changed: ${e.target.name} = ${e.target.value}`);
     setFormData({
       ...formData,
       [e.target.name]: e.target.value
     });
   };
 
-  // Handle form submission
   const handleSubmit = async (e) => {
     e.preventDefault();
-
-    // API endpoint for the backend
-    const apiUrl = 'http://127.0.0.1:5000/api/repo-market';
+    console.log('Submit button clicked');
 
     try {
-      // Make API request to backend
+      console.log('Form data:', formData);
+      const apiUrl = 'http://127.0.0.1:5000/api/repo-market';
+      console.log('Sending request to:', apiUrl);
+      
       const response = await axios.post(apiUrl, formData);
-
-      // Set the results in the parent component
+      console.log('Received response:', response.data);
       setResults(response.data);
     } catch (error) {
-      console.error('Error submitting form', error);
+      console.error('Error in handleSubmit:', error);
+      if (error.response) {
+        console.error('Response data:', error.response.data);
+        console.error('Response status:', error.response.status);
+      } else if (error.request) {
+        console.error('No response received:', error.request);
+      } else {
+        console.error('Error setting up request:', error.message);
+      }
     }
   };
 
@@ -42,7 +52,7 @@ const DataInput = ({ setResults }) => {
       <input type="date" name="end_date" value={formData.end_date} onChange={handleChange} required />
       <input type="text" name="bank" value={formData.bank} onChange={handleChange} required />
       <input type="number" name="loan_amount" value={formData.loan_amount} onChange={handleChange} required />
-      <button type="submit">Submit</button>
+      <button type="submit" onClick={() => console.log('Submit button clicked directly')}>Submit</button>
     </form>
   );
 };

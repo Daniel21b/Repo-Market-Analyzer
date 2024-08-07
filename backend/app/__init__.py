@@ -1,14 +1,16 @@
-# /Users/danielberhane/Desktop/Repo Market/Repo-Market-Analyzer/backend/app/__init__.py
-
 from flask import Flask
-from config import configure_app  # Adjusted import path
+from flask_cors import CORS
+from .routes.repo_market_routes import repo_market_bp
+from .routes.root_route import root_bp
+from .routes.test_routes import test_bp
 
-app = Flask(__name__)
-configure_app(app)
+def create_app():
+    app = Flask(__name__)
+    CORS(app, resources={r"/api/*": {"origins": "*"}})  # Enable CORS for all /api routes
 
-def initialize_routes(app):
-    from .routes.repo_market_routes import repo_market_bp
     app.register_blueprint(repo_market_bp)
+    app.register_blueprint(root_bp)
+    app.register_blueprint(test_bp)
+    return app
 
-# Initialize routes
-initialize_routes(app)
+app = create_app()
